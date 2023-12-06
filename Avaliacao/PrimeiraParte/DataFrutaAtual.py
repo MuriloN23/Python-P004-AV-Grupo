@@ -38,7 +38,7 @@ class Data:
     
     @ano.setter
     def ano(self, ano):
-        if ano < 2000 or ano > 2100:
+        if ano < 1800 or ano > 2300:
             raise ValueError("Ano inválido")
         self.__ano = ano
     
