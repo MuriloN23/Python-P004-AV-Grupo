@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 class Data:
-    def __init__(self, dia=1, mes=1, ano=2000):
+    def __init__(self, dia=1, mes=1, ano=1900):
         if dia < 1 or dia > 31:
             raise ValueError("Dia inválido")
         if mes < 1 or mes > 12:
             raise ValueError("Mês inválido")
-        if ano < 1800 or ano > 2300:
+        if ano < 1900 or ano > 2100:
             raise ValueError("Ano inválido")
         self.__dia = dia
         self.__mes = mes
@@ -38,17 +39,17 @@ class Data:
     
     @ano.setter
     def ano(self, ano):
-        if ano < 2000 or ano > 2100:
+        if ano < 1900 or ano > 2100:
             raise ValueError("Ano inválido")
         self.__ano = ano
     
     def __str__(self):
-        return "{:02d}/{:02d}/{}".format(self.__dia, self.__mes, self.__ano)
-    
+        return "{}/{}/{}".format(self.__dia, self.__mes, self.__ano)
+
     def __eq__(self, outraData):
-        return self.__dia == outraData.__dia and \
-               self.__mes == outraData.__mes and \
-               self.__ano == outraData.__ano
+        return  self.__dia == outraData.__dia and \
+                self.__mes == outraData.__mes and \
+                self.__ano == outraData.__ano
     
     def __lt__(self, outraData):
         if self.__ano < outraData.__ano:
@@ -73,9 +74,9 @@ class Data:
         return False
 
 class AnaliseDados(ABC):
-    @abstractmethod
     def __init__(self, tipoDeDados):
         self.__tipoDeDados = tipoDeDados
+        self.__dados = []
 
     @abstractmethod
     def entradaDeDados(self):
@@ -96,113 +97,114 @@ class AnaliseDados(ABC):
     @abstractmethod
     def listarEmOrdem(self):
         pass
+
+    def calcularMediana(self):
+        lista_ordenada = sorted(self.__dados)
+        tamanho = len(lista_ordenada)
+
+        if tamanho % 2 == 0:
+            meio1 = lista_ordenada[tamanho // 2 - 1]
+            meio2 = lista_ordenada[tamanho // 2]
+            return (meio1 + meio2) / 2
+        else:
+            return lista_ordenada[tamanho // 2]
 
 class ListaNomes(AnaliseDados):
     def __init__(self):
         super().__init__(str)
-        self.__lista = []
 
     def entradaDeDados(self):
-        n = int(input("Quantidade de nomes: "))
-        for _ in range(n):
+        num_elementos = int(input("\nQuantos nomes deseja inserir na lista? "))
+        print("___________________")
+        for _ in range(num_elementos):
             nome = input("Digite um nome: ")
-            self.__lista.append(nome)
+            self._AnaliseDados__dados.append(nome)
 
     def mostraMediana(self):
-        sorted_lista = sorted(self.__lista)
-        mid = len(sorted_lista) // 2
-        print("Mediana:", sorted_lista[mid])
+        return self.calcularMediana()
 
     def mostraMenor(self):
-        print("Menor:", min(self.__lista))
+        return min(self._AnaliseDados__dados)
 
     def mostraMaior(self):
-        print("Maior:", max(self.__lista))
+        return max(self._AnaliseDados__dados)
 
     def listarEmOrdem(self):
-        sorted_lista = sorted(self.__lista)
-        print("Lista de Nomes em Ordem:", sorted_lista)
+        return sorted(self._AnaliseDados__dados)
 
 class ListaDatas(AnaliseDados):
     def __init__(self):
         super().__init__(Data)
-        self.__lista = []
 
     def entradaDeDados(self):
-        n = int(input("Quantidade de datas: "))
-        for _ in range(n):
-            dia = int(input("Digite o dia: "))
-            mes = int(input("Digite o mês: "))
-            ano = int(input("Digite o ano: "))
-            data = Data(dia, mes, ano)
-            self.__lista.append(data)
+        num_elementos = int(input("Quantas datas deseja inserir na lista? "))
+        for _ in range(num_elementos):
+            try:
+                dia = int(input("Digite o dia: "))
+                mes = int(input("Digite o mês: "))
+                ano = int(input("Digite o ano: "))
+                print("___________________")
+                data = Data(dia, mes, ano)
+                self._AnaliseDados__dados.append(data)
+            except ValueError as e:
+                print(f"Erro: {e}. Por favor, insira uma data válida.")
 
     def mostraMediana(self):
-        sorted_lista = sorted(self.__lista, key=lambda x: (x.ano, x.mes, x.dia))
-        mid = len(sorted_lista) // 2
-        print("Mediana:", sorted_lista[mid])
+        datas_ordenadas = sorted(self._AnaliseDados__dados, key=lambda x: (x.ano, x.mes, x.dia))
+        return self.calcularMediana()
 
     def mostraMenor(self):
-        print("Menor:", min(self.__lista))
+        return min(self._AnaliseDados__dados)
 
     def mostraMaior(self):
-        print("Maior:", max(self.__lista))
+        return max(self._AnaliseDados__dados)
 
     def listarEmOrdem(self):
-        sorted_lista = sorted(self.__lista, key=lambda x: (x.ano, x.mes, x.dia))
-        print("Lista de Datas em Ordem:", sorted_lista)
+        return sorted(self._AnaliseDados__dados, key=lambda x: (x.ano, x.mes, x.dia))
 
 class ListaSalarios(AnaliseDados):
     def __init__(self):
         super().__init__(float)
-        self.__lista = []
 
     def entradaDeDados(self):
-        n = int(input("Quantidade de salários: "))
-        for _ in range(n):
+        num_elementos = int(input("Quantos salários deseja inserir na lista? "))
+        for _ in range(num_elementos):
             salario = float(input("Digite um salário: "))
-            self.__lista.append(salario)
+            self._AnaliseDados__dados.append(salario)
 
     def mostraMediana(self):
-        sorted_lista = sorted(self.__lista)
-        mid = len(sorted_lista) // 2
-        print("Mediana:", sorted_lista[mid])
+        return self.calcularMediana()
 
     def mostraMenor(self):
-        print("Menor:", min(self.__lista))
+        return min(self._AnaliseDados__dados)
 
     def mostraMaior(self):
-        print("Maior:", max(self.__lista))
+        return max(self._AnaliseDados__dados)
 
     def listarEmOrdem(self):
-        sorted_lista = sorted(self.__lista)
-        print("Lista de Salários em Ordem:", sorted_lista)
+        return sorted(self._AnaliseDados__dados)
 
 class ListaIdades(AnaliseDados):
     def __init__(self):
         super().__init__(int)
-        self.__lista = []
 
     def entradaDeDados(self):
-        n = int(input("Quantidade de idades: "))
-        for _ in range(n):
+        num_elementos = int(input("Quantas idades deseja inserir na lista? "))
+        for _ in range(num_elementos):
             idade = int(input("Digite uma idade: "))
-            self.__lista.append(idade)
+            self._AnaliseDados__dados.append(idade)
 
     def mostraMediana(self):
-        sorted_lista = sorted(self.__lista)
-        mid = len(sorted_lista) // 2
-        print("Mediana:", sorted_lista[mid])
+        return self.calcularMediana()
 
     def mostraMenor(self):
-        print("Menor:", min(self.__lista))
+        return min(self._AnaliseDados__dados)
 
     def mostraMaior(self):
-        print("Maior:", max(self.__lista))
+        return max(self._AnaliseDados__dados)
 
     def listarEmOrdem(self):
-        sorted_lista = sorted(self.__lista)
-        print("Lista de Idades em Ordem:", sorted_lista)
+        return sorted(self._AnaliseDados__dados)
 
 def main():
     nomes = ListaNomes()
@@ -214,10 +216,10 @@ def main():
 
     for lista in listaListas:
         lista.entradaDeDados()
-        lista.mostraMediana()
-        lista.mostraMenor()
-        lista.mostraMaior()
-        lista.listarEmOrdem()
+        print("Mediana:", lista.mostraMediana())
+        print("Menor:", lista.mostraMenor())
+        print("Maior:", lista.mostraMaior())
+        print("Em ordem:", lista.listarEmOrdem())
         print("___________________")
 
     print("Fim do teste!!!")
