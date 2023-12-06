@@ -4,4 +4,4 @@
 ### Murilo Novais
 ### Raíssa Simões
 ### Biancardy Lima
-###vErika Ravanna
+### Erika Ravanna
